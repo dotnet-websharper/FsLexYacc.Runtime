@@ -186,12 +186,19 @@ and [<Sealed>] LexBuffer<'char>(filler: LexBufferFiller<'char>) as this =
 
     member _.BufferScanPos = bufferScanStart + bufferScanLength
 
+    #if JAVASCRIPT 
+    [<WebSharper.Inline>]
+    #endif
     member lexbuf.EnsureBufferSize n =
         if lexbuf.BufferScanPos + n >= buffer.Length then
             let repl = Array.zeroCreate (lexbuf.BufferScanPos + n)
             Array.blit buffer bufferScanStart repl bufferScanStart bufferScanLength
             buffer <- repl
 
+
+    #if JAVASCRIPT
+    [<WebSharper.Inline>]
+    #endif
     static member FromReadFunctions
         (
             syncRead: ('char[] * int * int -> int) option,
@@ -226,9 +233,15 @@ and [<Sealed>] LexBuffer<'char>(filler: LexBufferFiller<'char>) as this =
         LexBuffer<_>(fillers)
 
     // A full type signature is required on this method because it is used at more specific types within its own scope
+    #if JAVASCRIPT
+    [<WebSharper.Inline>]
+    #endif
     static member FromFunction(f: 'char[] * int * int -> int) : LexBuffer<'char> =
         LexBuffer<_>.FromReadFunctions(Some(f), None)
 
+    #if JAVASCRIPT
+    [<WebSharper.Inline>]
+    #endif
     static member FromAsyncFunction(f: 'char[] * int * int -> Async<int>) : LexBuffer<'char> =
         LexBuffer<_>.FromReadFunctions(None, Some(f))
 

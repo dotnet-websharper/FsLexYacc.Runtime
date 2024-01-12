@@ -8,15 +8,16 @@ module internal IOProxies =
         inherit ReadableStream({|``type`` = "bytes"|})
         abstract Read: buffer:byte array * offset:int * count:int -> int
         abstract AsyncRead: buffer:byte array * ?offset:int * ?count:int -> Async<int>
-
-        // default this.AsyncRead(buffer: byte array, offset: int option, count: int option): Async<int> =
-        //     failwith "Not Implemented"
-        // default this.Read(buffer: byte array, offset: int, count: int): int =
-        //     failwith "Not Implemented"
+        
+        default this.AsyncRead(buffer: byte array, offset: int option, count: int option): Async<int> =
+            failwith "Not Implemented"
+        default this.Read(buffer: byte array, offset: int, count: int): int =
+            failwith "Not Implemented"
 
     [<Proxy(typeof<System.IO.StreamReader>)>]
     type StreamReaderProxy() =
         inherit StreamProxy()
+        // TODO: check
         member private this.reader = ReadableStreamDefaultReader(this |> As<ReadableStream>)
         new(stream:System.IO.Stream, detectEncodingFromByteOrderMarks: bool) = 
             StreamReaderProxy()
@@ -40,9 +41,25 @@ module internal IOProxies =
                 return this.Read(buffer,offset,count)
             }
 
+    [<Proxy(typeof<System.IO.BinaryReader>)>]
+    type BinaryReaderProxy() =
+        inherit StreamProxy()
+        // TODO
+    
+    [<Proxy(typeof<System.IO.TextReader>)>]
+    type TextReaderProxy() =
+        inherit StreamProxy()
+        // TODO
+
+    [<Proxy(typeof<System.Text.Encoding>)>]
+    type EncodingProxy() =
+        member this.Placeholder() = () // TODO
+
     [<Proxy(typeof<System.IO.FileStream>)>]
     type FileStreamProxy() =
         inherit StreamProxy()
+
+        // TODO proper proxy
         new(path  : string, mode  : System.IO.FileMode, access: System.IO.FileAccess, share : System.IO.FileShare) =
             FileStreamProxy()
 

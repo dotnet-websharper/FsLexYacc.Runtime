@@ -6,7 +6,7 @@ open FSharp.Text.Lexing
 open System.Collections.Generic
 
 #if JAVASCRIPT
-[<WebSharper.JavaScript; WebSharper.Prototype(true)>]
+[<WebSharper.JavaScript(WebSharper.JavaScriptOptions.DefaultToUndefined)>]
 #endif
 type IParseState = 
     abstract InputRange: int -> Position * Position
@@ -23,6 +23,17 @@ type IParseState =
 
     abstract RaiseError<'b> : unit -> 'b 
 
+#if JAVASCRIPT
+type ParseStateImpl<'b>(inputRange, inputStartPosition, inputEndPosition, getInput, resultRange, localStore, raiseFn: unit -> 'b) =
+    interface IParseState with 
+        member _.InputRange(n) = inputRange n
+        member _.InputStartPosition(n) = inputStartPosition n
+        member _.InputEndPosition(n) = inputEndPosition n
+        member _.GetInput(n)    = getInput n   
+        member _.ResultRange    = resultRange  
+        member _.ParserLocalStore = (localStore :> IDictionary<_,_>)
+        member _.RaiseError<'b>()  = raiseFn() // TODO: fix
+#endif
 //-------------------------------------------------------------------------
 // This context is passed to the error reporter when a syntax error occurs
 
@@ -96,6 +107,9 @@ type internal Stack<'a>(n)  =
     let mutable contents = Array.zeroCreate<'a>(n)
     let mutable count = 0
 
+    #if JAVASCRIPT
+    [<WebSharper.Inline>]
+    #endif
     member buf.Ensure newSize = 
         let oldSize = Array.length contents
         if newSize > oldSize then 
@@ -107,6 +121,9 @@ type internal Stack<'a>(n)  =
     member buf.Pop() = count <- count - 1
     member buf.Peep() = contents.[count - 1]
     member buf.Top(n) = [ for x in contents.[max 0 (count-n)..count - 1] -> x ] |> List.rev
+    #if JAVASCRIPT
+    [<WebSharper.Inline>]
+    #endif
     member buf.Push(x) =
         buf.Ensure(count + 1) 
         contents.[count] <- x 
@@ -269,7 +286,18 @@ module Implementation =
         let gotoTable = AssocTable(tables.gotos, tables.sparseGotoTableRowOffsets)
         let stateToProdIdxsTable = IdxToIdxListTable(tables.stateToProdIdxsTableElements, tables.stateToProdIdxsTableRowOffsets)
 
-        let parseState =                                                                                            
+        let parseState =    
+            #if JAVASCRIPT
+            ParseStateImpl(
+                (fun n -> ruleStartPoss.[n-1], ruleEndPoss.[n-1]),
+                (fun n -> ruleStartPoss.[n-1]),
+                (fun n -> ruleEndPoss.[n-1] ),
+                (fun n -> ruleValues.[n-1] ),
+                (lhsPos.[0], lhsPos.[1]),
+                localStore,
+                (fun () -> raise RecoverableParseError)
+            )
+            #else                                                                                        
             { new IParseState with 
                 member _.InputRange(n) = ruleStartPoss.[n-1], ruleEndPoss.[n-1] 
                 member _.InputStartPosition(n) = ruleStartPoss.[n-1]
@@ -282,6 +310,7 @@ module Implementation =
                 #endif
                 member _.RaiseError()  = raise RecoverableParseError  (* NOTE: this binding tests the fairly complex logic associated with an object expression implementing a generic abstract method *)
             }       
+            #endif
 
 #if __DEBUG
         let report haveLookahead lookaheadToken = 
@@ -516,7 +545,7 @@ module Implementation =
 
 type Tables<'tok> with
     #if JAVASCRIPT
-    [<WebSharper.JavaScript>]
+    [<WebSharper.JavaScript;WebSharper.Inline>]
     #endif
     member tables.Interpret (lexer,lexbuf,startState) = 
         Implementation.interpret tables lexer lexbuf startState
