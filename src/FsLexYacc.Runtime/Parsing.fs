@@ -5,6 +5,9 @@ open FSharp.Text.Lexing
 
 open System.Collections.Generic
 
+#if JAVASCRIPT
+[<WebSharper.JavaScript; WebSharper.Prototype(true)>]
+#endif
 type IParseState = 
     abstract InputRange: int -> Position * Position
 
@@ -24,6 +27,9 @@ type IParseState =
 // This context is passed to the error reporter when a syntax error occurs
 
 [<Sealed>]
+#if JAVASCRIPT
+[<WebSharper.JavaScript>]
+#endif
 type ParseErrorContext<'tok>
          (//lexbuf: LexBuffer<_>,
           stateStack:int list,
@@ -51,7 +57,9 @@ type ParseErrorContext<'tok>
 
 //-------------------------------------------------------------------------
 // This is the data structure emitted as code by FSYACC.  
-
+#if JAVASCRIPT
+[<WebSharper.JavaScript>]
+#endif
 type Tables<'tok> = 
     { reductions: (IParseState -> obj)[]
       endOfInputTag: int
@@ -78,8 +86,13 @@ type Tables<'tok> =
 
 // This type is in System.dll so for the moment we can't use it in FSharp.Core.dll
 //type Stack<'a> = System.Collections.Generic.Stack<'a>
-
+#if JAVASCRIPT
+[<WebSharper.JavaScript>]
+#endif
 type internal Stack<'a>(n)  = 
+    #if JAVASCRIPT
+    [<WebSharper.Inline>]
+    #endif
     let mutable contents = Array.zeroCreate<'a>(n)
     let mutable count = 0
 
@@ -117,6 +130,9 @@ module Flags =
     let mutable debug = false
 #endif
 
+#if JAVASCRIPT
+[<WebSharper.JavaScript>]
+#endif
 module Implementation = 
     
     // Definitions shared with fsyacc 
@@ -202,7 +218,9 @@ module Implementation =
         val endPos: Position
 
         new(value,startPos,endPos) = { value=value; startPos=startPos; endPos=endPos }
-
+    #if JAVASCRIPT
+    [<WebSharper.Inline>]
+    #endif
     let interpret (tables: Tables<'tok>) lexer (lexbuf : LexBuffer<_>) initialState =                                                                      
         let localStore = Dictionary<string,obj>() in
         localStore.["LexBuffer"] <- lexbuf
@@ -259,6 +277,9 @@ module Implementation =
                 member _.GetInput(n)    = ruleValues.[n-1]        
                 member _.ResultRange    = (lhsPos.[0], lhsPos.[1])  
                 member _.ParserLocalStore = (localStore :> IDictionary<_,_>) 
+                #if JAVASCRIPT
+                [<WebSharper.Inline>]
+                #endif
                 member _.RaiseError()  = raise RecoverableParseError  (* NOTE: this binding tests the fairly complex logic associated with an object expression implementing a generic abstract method *)
             }       
 
@@ -494,9 +515,15 @@ module Implementation =
         valueStack.Peep().value
 
 type Tables<'tok> with
+    #if JAVASCRIPT
+    [<WebSharper.JavaScript>]
+    #endif
     member tables.Interpret (lexer,lexbuf,startState) = 
         Implementation.interpret tables lexer lexbuf startState
     
+#if JAVASCRIPT
+[<WebSharper.JavaScript>]
+#endif
 module ParseHelpers = 
     let parse_error (_s:string) = ()
     let parse_error_rich = (None : (ParseErrorContext<_> -> unit) option)
