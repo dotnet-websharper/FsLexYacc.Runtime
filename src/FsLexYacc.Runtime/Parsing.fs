@@ -23,17 +23,17 @@ type IParseState =
 
     abstract RaiseError<'b> : unit -> 'b 
 
-#if JAVASCRIPT
-type ParseStateImpl<'b>(inputRange, inputStartPosition, inputEndPosition, getInput, resultRange, localStore, raiseFn: unit -> 'b) =
-    interface IParseState with 
-        member _.InputRange(n) = inputRange n
-        member _.InputStartPosition(n) = inputStartPosition n
-        member _.InputEndPosition(n) = inputEndPosition n
-        member _.GetInput(n)    = getInput n   
-        member _.ResultRange    = resultRange  
-        member _.ParserLocalStore = (localStore :> IDictionary<_,_>)
-        member _.RaiseError<'b>()  = raiseFn() // TODO: fix
-#endif
+// #if JAVASCRIPT
+// type ParseStateImpl<'b>(inputRange: int -> Position * Position, inputStartPosition: int -> Position, inputEndPosition, getInput, resultRange, localStore, raiseFn: unit -> 'b) =
+//     interface IParseState with 
+//         member _.InputRange(n) = inputRange n
+//         member _.InputStartPosition(n) = inputStartPosition n
+//         member _.InputEndPosition(n) = inputEndPosition n
+//         member _.GetInput(n)    = getInput n   
+//         member _.ResultRange    = resultRange  
+//         member _.ParserLocalStore = (localStore :> IDictionary<_,_>)
+//         member _.RaiseError<'b>()  = raiseFn() // TODO: fix
+// #endif
 //-------------------------------------------------------------------------
 // This context is passed to the error reporter when a syntax error occurs
 
@@ -103,8 +103,10 @@ type Tables<'tok> =
 type internal Stack<'a>(n)  = 
     #if JAVASCRIPT
     [<WebSharper.Inline>]
-    #endif
+    let mutable contents = Array.init n (fun _ -> WebSharper.JavaScript.JS.Undefined |> WebSharper.JavaScript.Pervasives.As<'a>)
+    #else
     let mutable contents = Array.zeroCreate<'a>(n)
+    #endif
     let mutable count = 0
 
     #if JAVASCRIPT
@@ -287,17 +289,17 @@ module Implementation =
         let stateToProdIdxsTable = IdxToIdxListTable(tables.stateToProdIdxsTableElements, tables.stateToProdIdxsTableRowOffsets)
 
         let parseState =    
-            #if JAVASCRIPT
-            ParseStateImpl(
-                (fun n -> ruleStartPoss.[n-1], ruleEndPoss.[n-1]),
-                (fun n -> ruleStartPoss.[n-1]),
-                (fun n -> ruleEndPoss.[n-1] ),
-                (fun n -> ruleValues.[n-1] ),
-                (lhsPos.[0], lhsPos.[1]),
-                localStore,
-                (fun () -> raise RecoverableParseError)
-            )
-            #else                                                                                        
+            // #if JAVASCRIPT
+            // ParseStateImpl(
+            //     (fun n -> ruleStartPoss.[n-1], ruleEndPoss.[n-1]),
+            //     (fun n -> ruleStartPoss.[n-1]),
+            //     (fun n -> ruleEndPoss.[n-1] ),
+            //     (fun n -> ruleValues.[n-1] ),
+            //     (lhsPos.[0], lhsPos.[1]),
+            //     localStore,
+            //     (fun () -> raise RecoverableParseError)
+            // )
+            // #else                                                                                        
             { new IParseState with 
                 member _.InputRange(n) = ruleStartPoss.[n-1], ruleEndPoss.[n-1] 
                 member _.InputStartPosition(n) = ruleStartPoss.[n-1]
@@ -310,7 +312,7 @@ module Implementation =
                 #endif
                 member _.RaiseError()  = raise RecoverableParseError  (* NOTE: this binding tests the fairly complex logic associated with an object expression implementing a generic abstract method *)
             }       
-            #endif
+            // #endif
 
 #if __DEBUG
         let report haveLookahead lookaheadToken = 
