@@ -26,13 +26,13 @@ type IParseState =
 // #if JAVASCRIPT
 // type ParseStateImpl<'b>(inputRange: int -> Position * Position, inputStartPosition: int -> Position, inputEndPosition, getInput, resultRange, localStore, raiseFn: unit -> 'b) =
 //     interface IParseState with 
-//         member _.InputRange(n) = inputRange n
-//         member _.InputStartPosition(n) = inputStartPosition n
-//         member _.InputEndPosition(n) = inputEndPosition n
-//         member _.GetInput(n)    = getInput n   
-//         member _.ResultRange    = resultRange  
-//         member _.ParserLocalStore = (localStore :> IDictionary<_,_>)
-//         member _.RaiseError<'b>()  = raiseFn() // TODO: fix
+//         member this.InputRange(n) = inputRange n
+//         member this.InputStartPosition(n) = inputStartPosition n
+//         member this.InputEndPosition(n) = inputEndPosition n
+//         member this.GetInput(n)    = getInput n   
+//         member this.ResultRange    = resultRange  
+//         member this.ParserLocalStore = (localStore :> IDictionary<_,_>)
+//         member this.RaiseError<'b>()  = raiseFn() // TODO: fix
 // #endif
 //-------------------------------------------------------------------------
 // This context is passed to the error reporter when a syntax error occurs
@@ -51,19 +51,19 @@ type ParseErrorContext<'tok>
           shiftableTokens: int list, 
           message : string) =
 
-      member _.StateStack  = stateStack
+      member this.StateStack  = stateStack
 
-      member _.ReduceTokens = reduceTokens
+      member this.ReduceTokens = reduceTokens
 
-      member _.CurrentToken = currentToken
+      member this.CurrentToken = currentToken
 
-      member _.ParseState = parseState
+      member this.ParseState = parseState
 
-      member _.ReducibleProductions = reducibleProductions
+      member this.ReducibleProductions = reducibleProductions
 
-      member _.ShiftTokens = shiftableTokens
+      member this.ShiftTokens = shiftableTokens
 
-      member _.Message = message
+      member this.Message = message
 
 
 //-------------------------------------------------------------------------
@@ -209,7 +209,7 @@ module Implementation =
 
         // Read all entries in the association table
         // Used during error recovery to find all valid entries in the table
-        member _.ReadAll(n) =       
+        member this.ReadAll(n) =       
             let headOfTable = int offsetTab.[n]
             let firstElemNumber = headOfTable + 1           
             let numberOfElementsInAssoc = int32 elemTab.[headOfTable*2]           
@@ -220,7 +220,7 @@ module Implementation =
     type IdxToIdxListTable(elemTab:uint16[], offsetTab:uint16[]) =
 
         // Read all entries in a row of the table
-        member _.ReadAll(n) =       
+        member this.ReadAll(n) =       
             let headOfTable = int offsetTab.[n]
             let firstElemNumber = headOfTable + 1           
             let numberOfElements = int32 elemTab.[headOfTable]           
@@ -301,16 +301,16 @@ module Implementation =
             // )
             // #else                                                                                        
             { new IParseState with 
-                member _.InputRange(n) = ruleStartPoss.[n-1], ruleEndPoss.[n-1] 
-                member _.InputStartPosition(n) = ruleStartPoss.[n-1]
-                member _.InputEndPosition(n) = ruleEndPoss.[n-1] 
-                member _.GetInput(n)    = ruleValues.[n-1]        
-                member _.ResultRange    = (lhsPos.[0], lhsPos.[1])  
-                member _.ParserLocalStore = (localStore :> IDictionary<_,_>) 
+                member this.InputRange(n) = ruleStartPoss.[n-1], ruleEndPoss.[n-1] 
+                member this.InputStartPosition(n) = ruleStartPoss.[n-1]
+                member this.InputEndPosition(n) = ruleEndPoss.[n-1] 
+                member this.GetInput(n)    = ruleValues.[n-1]        
+                member this.ResultRange    = (lhsPos.[0], lhsPos.[1])  
+                member this.ParserLocalStore = (localStore :> IDictionary<_,_>) 
                 #if JAVASCRIPT
                 [<WebSharper.Inline>]
                 #endif
-                member _.RaiseError()  = raise RecoverableParseError  (* NOTE: this binding tests the fairly complex logic associated with an object expression implementing a generic abstract method *)
+                member this.RaiseError()  = raise RecoverableParseError  (* NOTE: this binding tests the fairly complex logic associated with an object expression implementing a generic abstract method *)
             }       
             // #endif
 

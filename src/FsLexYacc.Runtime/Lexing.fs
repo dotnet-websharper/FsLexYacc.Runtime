@@ -5,6 +5,9 @@ module FSharp.Text.Lexing
 
 open System.Collections.Generic
 
+#if JAVASCRIPT
+[<WebSharper.JavaScript>]
+#endif
 // REVIEW: This type showed up on a parsing-intensive performance measurement. Consider whether it can be a struct-record later when we have this feature. -jomo
 [<Struct>]
 type Position =
@@ -72,22 +75,29 @@ type Position =
             pos_cnum = 0
         }
 
+#if JAVASCRIPT
+[<WebSharper.JavaScript>]
+#endif
 type LexBufferFiller<'char> =
     {
         fillSync: (LexBuffer<'char> -> unit) option
         fillAsync: (LexBuffer<'char> -> Async<unit>) option
     }
 
-and [<Sealed>] LexBuffer<'char>(filler: LexBufferFiller<'char>) as this =
+#if JAVASCRIPT
+and [<Sealed;WebSharper.JavaScript>] LexBuffer<'char>(filler: LexBufferFiller<'char>) =
+#else
+and [<Sealed>] LexBuffer<'char>(filler: LexBufferFiller<'char>) =
+#endif
     let context = Dictionary<string, obj>(1)
 
-    let extendBufferSync =
+    let extendBufferSync this =
         (fun () ->
             match filler.fillSync with
             | Some refill -> refill this
             | None -> invalidOp "attempt to read synchronously from an asynchronous lex buffer")
 
-    let extendBufferAsync =
+    let extendBufferAsync this =
         (fun () ->
             match filler.fillAsync with
             | Some refill -> refill this
@@ -133,58 +143,58 @@ and [<Sealed>] LexBuffer<'char>(filler: LexBufferFiller<'char>) as this =
         lexbuf.EndPos <- endPos.EndOfToken(lexbuf.LexemeLength)
         bufferAcceptAction
 
-    member _.StartPos
+    member this.StartPos
         with get () = startPos
         and set b = startPos <- b
 
-    member _.EndPos
+    member this.EndPos
         with get () = endPos
         and set b = endPos <- b
 
-    member _.Lexeme = Array.sub buffer bufferScanStart lexemeLength
+    member this.Lexeme = Array.sub buffer bufferScanStart lexemeLength
 
-    member _.LexemeChar n = buffer.[n + bufferScanStart]
+    member this.LexemeChar n = buffer.[n + bufferScanStart]
 
-    member _.BufferLocalStore = (context :> IDictionary<_, _>)
+    member this.BufferLocalStore = (context :> IDictionary<_, _>)
 
-    member _.LexemeLength
+    member this.LexemeLength
         with get (): int = lexemeLength
         and set v = lexemeLength <- v
 
-    member _.Buffer
-        with internal get (): 'char[] = buffer
-        and internal set v = buffer <- v
+    member this.Buffer
+        with get (): 'char[] = buffer
+        and set v = buffer <- v
 
-    member _.BufferMaxScanLength
-        with internal get () = bufferMaxScanLength
-        and internal set v = bufferMaxScanLength <- v
+    member this.BufferMaxScanLength
+        with get () = bufferMaxScanLength
+        and set v = bufferMaxScanLength <- v
 
-    member _.BufferScanLength
-        with internal get () = bufferScanLength
-        and internal set v = bufferScanLength <- v
+    member this.BufferScanLength
+        with get () = bufferScanLength
+        and set v = bufferScanLength <- v
 
-    member _.BufferScanStart
-        with internal get (): int = bufferScanStart
-        and internal set v = bufferScanStart <- v
+    member this.BufferScanStart
+        with get (): int = bufferScanStart
+        and set v = bufferScanStart <- v
 
-    member _.BufferAcceptAction
-        with internal get () = bufferAcceptAction
-        and internal set v = bufferAcceptAction <- v
+    member this.BufferAcceptAction
+        with get () = bufferAcceptAction
+        and set v = bufferAcceptAction <- v
 
-    member internal _.RefillBuffer = extendBufferSync
+    member this.RefillBuffer = extendBufferSync this
 
-    member internal _.AsyncRefillBuffer = extendBufferAsync
+    member this.AsyncRefillBuffer = extendBufferAsync this
 
     static member LexemeString(lexbuf: LexBuffer<char>) =
         System.String(lexbuf.Buffer, lexbuf.BufferScanStart, lexbuf.LexemeLength)
 
-    member _.IsPastEndOfStream
+    member this.IsPastEndOfStream
         with get () = eof
         and set b = eof <- b
 
-    member _.DiscardInput() = discardInput ()
+    member this.DiscardInput() = discardInput ()
 
-    member _.BufferScanPos = bufferScanStart + bufferScanLength
+    member this.BufferScanPos = bufferScanStart + bufferScanLength
 
     #if JAVASCRIPT 
     [<WebSharper.Inline>]
@@ -290,7 +300,9 @@ and [<Sealed>] LexBuffer<'char>(filler: LexBufferFiller<'char>) as this =
     static member FromStream(stream: System.IO.Stream) : LexBuffer<byte> =
         LexBuffer<byte>
             .FromReadFunctions(Some(stream.Read), Some(fun (buf, offset, len) -> stream.AsyncRead(buf, offset = offset, count = len)))
-
+#if JAVASCRIPT
+[<WebSharper.JavaScript>]
+#endif
 module GenericImplFragments =
     let startInterpret (lexBuffer: LexBuffer<_>) =
         lexBuffer.BufferScanStart <- lexBuffer.BufferScanStart + lexBuffer.LexemeLength
@@ -322,6 +334,9 @@ module GenericImplFragments =
 
 open GenericImplFragments
 
+#if JAVASCRIPT
+[<WebSharper.JavaScript>]
+#endif
 [<Sealed>]
 type AsciiTables(trans: uint16[] array, accept: uint16[]) =
     let rec scanUntilSentinel (lexBuffer, state) =
@@ -391,6 +406,9 @@ type AsciiTables(trans: uint16[] array, accept: uint16[]) =
 
     static member Create(trans, accept) = AsciiTables(trans, accept)
 
+#if JAVASCRIPT
+[<WebSharper.JavaScript>]
+#endif
 [<Sealed>]
 type UnicodeTables(trans: uint16[] array, accept: uint16[]) =
     let sentinel = 255 * 256 + 255
