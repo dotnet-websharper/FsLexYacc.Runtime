@@ -74,7 +74,9 @@ module internal Proxies =
 
     [<Proxy(typeof<System.Text.Encoding>)>]
     type EncodingProxy() =
-        member this.GetEncoding(codepage:int): System.Text.Encoding = System.Text.Encoding.Default
+        static member GetEncoding(codepage:int): System.Text.Encoding = System.Text.Encoding.Default
+        [<Inline("new TextEncoder().encoding")>]
+        static member Default : System.Text.Encoding = X
 
     [<Proxy(typeof<System.IO.FileStream>)>]
     type FileStreamProxy() =
