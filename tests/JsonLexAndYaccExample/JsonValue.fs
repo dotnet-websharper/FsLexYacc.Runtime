@@ -1,4 +1,5 @@
-﻿module JsonParsing
+﻿[<WebSharper.JavaScript>]
+module JsonParsing
 
 
 type JsonValue = 

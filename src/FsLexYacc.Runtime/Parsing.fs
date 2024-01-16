@@ -109,23 +109,22 @@ type internal Stack<'a>(n)  =
     #endif
     let mutable count = 0
 
-    #if JAVASCRIPT
-    [<WebSharper.Inline>]
-    #endif
     member buf.Ensure newSize = 
         let oldSize = Array.length contents
         if newSize > oldSize then 
             let old = contents
+            #if JAVASCRIPT
+            contents <- Array.init (max newSize (oldSize * 2)) (fun _ -> WebSharper.JavaScript.JS.Undefined |> WebSharper.JavaScript.Pervasives.As<'a>)
+            #else
             contents <- Array.zeroCreate (max newSize (oldSize * 2))
+            #endif
             Array.blit old 0 contents 0 count
     
     member buf.Count = count
     member buf.Pop() = count <- count - 1
     member buf.Peep() = contents.[count - 1]
     member buf.Top(n) = [ for x in contents.[max 0 (count-n)..count - 1] -> x ] |> List.rev
-    #if JAVASCRIPT
-    [<WebSharper.Inline>]
-    #endif
+
     member buf.Push(x) =
         buf.Ensure(count + 1) 
         contents.[count] <- x 
@@ -161,7 +160,9 @@ module Implementation =
     let errorFlag = 0x8000
     let acceptFlag = 0xc000
     let actionMask = 0xc000
-
+    #if JAVASCRIPT
+    [<WebSharper.Inline("$action&~0xc000")>]
+    #endif
     let actionValue action = action &&& (~~~ actionMask)                                    
     let actionKind action = action &&& actionMask
     

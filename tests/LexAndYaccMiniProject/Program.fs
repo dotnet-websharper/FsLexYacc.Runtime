@@ -1,4 +1,6 @@
 ﻿// Learn more about F# at http://fsharp.net
+[<WebSharper.JavaScript>]
+module LexYaccTest
 
 open System.IO
 open FSharp.Text.Lexing
@@ -9,24 +11,22 @@ let testLexerAndParserFromString text expectedCount =
     let countFromParser = Parser.start Lexer.tokenstream lexbuf
 
     printfn "countFromParser: result = %d, expected %d" countFromParser expectedCount
+// #if !JAVASCRIPT
+// let testLexerAndParserFromFile (fileName:string) expectedCount = 
+//     use textReader = new System.IO.StreamReader(fileName)
+//     let lexbuf = LexBuffer<char>.FromTextReader textReader
 
-let testLexerAndParserFromFile (fileName:string) expectedCount = 
-    use textReader = new System.IO.StreamReader(fileName)
-    let lexbuf = LexBuffer<char>.FromTextReader textReader
+//     let countFromParser = Parser.start Lexer.tokenstream lexbuf
 
-    let countFromParser = Parser.start Lexer.tokenstream lexbuf
+//     printfn "countFromParser: result = %d, expected %d" countFromParser expectedCount
 
-    printfn "countFromParser: result = %d, expected %d" countFromParser expectedCount
+// testLexerAndParserFromString "hello" 1
+// testLexerAndParserFromString "hello hello" 2
 
-testLexerAndParserFromString "hello" 1
-testLexerAndParserFromString "hello hello" 2
+// let testFile = Path.Combine(__SOURCE_DIRECTORY__, "test.txt")
+// File.WriteAllText(testFile, "hello hello")
+// testLexerAndParserFromFile testFile 2
 
-let testFile = Path.Combine(__SOURCE_DIRECTORY__, "test.txt")
-File.WriteAllText(testFile, "hello hello")
-testLexerAndParserFromFile testFile 2
-
-printfn "Press any key to continue..."
-System.Console.ReadLine() |> ignore
-
-
-
+// printfn "Press any key to continue..."
+// System.Console.ReadLine() |> ignore
+// #endif

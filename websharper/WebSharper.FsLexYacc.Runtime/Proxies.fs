@@ -76,15 +76,17 @@ module internal Proxies =
         member this.Read():int =
             let reader = this.GetReader() |> As<ReadableStreamDefaultReader>
             let v = reader.Read().Value
-            if v = null then -1 else As<int> v
+            if v = null then -1 else (v |> As<int>)
 
         override this.Read(buffer:char[], index:int, count:int) : int =
+            let mutable ch_count = 0
             let mutable i = index
             let mutable ch = this.Read()
             let mutable ch_count = if ch > -1 then 1 else 0
             while i < index+count && ch > -1 do
                 buffer[i] <- char ch
                 ch_count <- ch_count + 1
+                ch <- this.Read()
             ch_count
         
         override this.ReadAsync(buffer:char[], index:int, count:int) : System.Threading.Tasks.Task<int> =

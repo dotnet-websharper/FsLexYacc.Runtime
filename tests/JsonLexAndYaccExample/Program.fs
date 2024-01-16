@@ -1,10 +1,11 @@
 ﻿
-module Program
+[<WebSharper.JavaScript>]
+module LexYaccJsonTest
 open FSharp.Text.Lexing
 open JsonParsing
 
-[<EntryPoint>]
-let main argv =
+// [<EntryPoint>]
+let TestJson() =
     let parse json = 
         let lexbuf = LexBuffer<char>.FromString json
         let res = Parser.start Lexer.read lexbuf
@@ -26,8 +27,9 @@ let main argv =
     let parseResult2 = simpleJson2 |> parse 
     printfn "%s" (JsonValue.print parseResult2.Value)
 
-    let complexJson = System.IO.File.ReadAllText "randomComplexTestsJson.json"
-    complexJson |> parse |> ignore
+
+    // let complexJson = System.IO.File.ReadAllText "randomComplexTestsJson.json"
+    // complexJson |> parse |> ignore
 
 
     //test lexing error 
@@ -37,5 +39,4 @@ let main argv =
         printfn "%s" (JsonValue.print parseResult.Value)
     with 
         | e ->  printfn "Error is expected here: \n %s" (e.Message)
-
-    0
+    

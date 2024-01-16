@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>WebSharper.LexAndYaccMiniProject</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="Content/WebSharper.LexAndYaccMiniProject.css" />
+    <style>
+        /* Don't show the not-yet-loaded templates */
+        [ws-template], [ws-children-template] { display: none; }
+    </style>
+    <script type="module" src="Content/WebSharper.LexAndYaccMiniProject.head.js"></script>
+</head>
+<body>
+    <h1>My list of unique people</h1>
+    <div id="main" ws-children-template="Main">
+        <ul ws-hole="ListContainer">
+            <li ws-template="ListItem">${Name}</li>
+        </ul>
+        <div>
+            <input ws-var="Name" placeholder="Name" />
+            <button ws-onclick="Add">Add</button>
+            <div>You are about to add: ${Name}</div>
+        </div>
+        <h1>Parser test</h1>
+        <div>
+            <input ws-var="ParserText" placeholder="hello hello" />
+            <button ws-onclick="TestParser">Parse</button>
+            <div>Number of tokens: ${TokenCount}</div>
+        </div>
+    </div>
+    <script type="module" src="Content/WebSharper.LexAndYaccMiniProject.js"></script>
+</body>
+</html>

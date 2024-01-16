@@ -215,3 +215,6 @@ tests/fsyacc/Test2/test2lex.fs
 tests/fsyacc/Test2/test2.fs
 tests/fsyacc/Test2/test2.fsi
 tests/fsyacc/repro_#141/Lexer_fail_option_i.fs
+
+**/wwwroot/Content
+.vite/
