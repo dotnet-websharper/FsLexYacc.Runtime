@@ -19,11 +19,12 @@ module Client =
             "Paul"
         ]
 
+    type Doc with
+        static member html = Doc.Verbatim
 
     [<SPAEntryPoint>]
     let Main () =
         let newName = Var.Create ""
-
         IndexTemplate.Main()
             .ListContainer(
                 People.View.DocSeqCached(fun (name: string) ->
@@ -33,7 +34,7 @@ module Client =
             .Name(newName)
             .Add(fun _ ->
                 People.Add(newName.Value)
-                newName.Value <- ""
+                newName.Set ""
             )
             .JsonTestRun(ignore >> TestJson)
             .Doc()

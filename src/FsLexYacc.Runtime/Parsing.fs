@@ -160,9 +160,6 @@ module Implementation =
     let errorFlag = 0x8000
     let acceptFlag = 0xc000
     let actionMask = 0xc000
-    #if JAVASCRIPT
-    [<WebSharper.Inline("$action&~0xc000")>]
-    #endif
     let actionValue action = action &&& (~~~ actionMask)                                    
     let actionKind action = action &&& actionMask
     
