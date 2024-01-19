@@ -1,5 +1,7 @@
 ﻿// Learn more about F# at http://fsharp.net
+#if JAVASCRIPT
 [<WebSharper.JavaScript>]
+#endif
 module LexYaccTest
 
 open System.IO

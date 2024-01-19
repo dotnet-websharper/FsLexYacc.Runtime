@@ -1,7 +1,7 @@
 open Tree
 open System.IO
 open Microsoft.FSharp.Quotations
-// open Microsoft.FSharp.Compatibility.OCaml
+open Microsoft.FSharp.Compatibility.OCaml
 open FSharp.Text.Lexing
 let tokenize = ref false
 

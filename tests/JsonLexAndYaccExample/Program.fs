@@ -1,5 +1,6 @@
-﻿
+﻿#if JAVASCRIPT
 [<WebSharper.JavaScript>]
+#endif
 module LexYaccJsonTest
 open FSharp.Text.Lexing
 open JsonParsing

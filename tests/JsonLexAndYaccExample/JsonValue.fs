@@ -1,4 +1,6 @@
-﻿[<WebSharper.JavaScript>]
+﻿#if JAVASCRIPT
+[<WebSharper.JavaScript>]
+#endif
 module JsonParsing
 
 

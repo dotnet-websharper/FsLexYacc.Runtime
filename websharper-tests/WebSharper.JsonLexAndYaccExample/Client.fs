@@ -13,29 +13,23 @@ module Client =
     // and refresh your browser, no need to recompile unless you add or remove holes.
     type IndexTemplate = Template<"wwwroot/index.html", ClientLoad.FromDocument>
 
-    let People =
-        ListModel.FromSeq [
-            "John"
-            "Paul"
-        ]
+    let People = ListModel.FromSeq [ "John"; "Paul" ]
 
     type Doc with
+
         static member html = Doc.Verbatim
 
     [<SPAEntryPoint>]
     let Main () =
         let newName = Var.Create ""
-        IndexTemplate.Main()
-            .ListContainer(
-                People.View.DocSeqCached(fun (name: string) ->
-                    IndexTemplate.ListItem().Name(name).Doc()
-                )
-            )
+
+        IndexTemplate
+            .Main()
+            .ListContainer(People.View.DocSeqCached(fun (name: string) -> IndexTemplate.ListItem().Name(name).Doc()))
             .Name(newName)
             .Add(fun _ ->
                 People.Add(newName.Value)
-                newName.Set ""
-            )
+                newName.Set "")
             .JsonTestRun(ignore >> TestJson)
             .Doc()
         |> Doc.RunById "main"
