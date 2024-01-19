@@ -218,3 +218,5 @@ tests/fsyacc/repro_#141/Lexer_fail_option_i.fs
 
 **/wwwroot/Content
 .vite/
+
+paket-files/

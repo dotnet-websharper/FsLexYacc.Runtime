@@ -1,9 +1,6 @@
 dotnet tool restore
 dotnet paket restore
 
-dotnet fake run build.fsx Build
+dotnet fake build build.fsx WSBuild
 
-cd websharper-tests/WebSharper.JsonLexAndYaccExample
-dotnet build
-cd ../WebSharper.LexAndYaccMiniProject
-dotnet build
+dotnet fake run wsbuild.fsx %*
