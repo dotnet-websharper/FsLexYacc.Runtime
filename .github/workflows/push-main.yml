@@ -1,9 +1,7 @@
 name: Build and Test and Publish (master)
 
 on:
-  push:
-    branches:
-    - master
+  workflow_dispatch:
 
 permissions:
   contents: read
