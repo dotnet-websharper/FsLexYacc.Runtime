@@ -220,3 +220,5 @@ tests/fsyacc/repro_#141/Lexer_fail_option_i.fs
 .vite/
 
 paket-files/
+
+nuget/WebSharper.FsLexYacc.Runtime.paket.template

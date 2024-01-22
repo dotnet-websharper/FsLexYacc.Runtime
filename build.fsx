@@ -2,6 +2,7 @@
 #r "nuget: FAKE.Core"
 #r "nuget: Fake.Core.Target"
 #r "nuget: Fake.IO.FileSystem"
+#r "nuget: Fake.Core.ReleaseNotes"
 #r "nuget: Fake.Tools.Git"
 #r "nuget: Fake.DotNet.Cli"
 #r "nuget: Fake.DotNet.AssemblyInfoFile"
@@ -13,6 +14,7 @@ nuget FSharp.Core 5.0.0
 nuget FAKE.Core
 nuget Fake.Core.Target
 nuget Fake.IO.FileSystem
+nuget Fake.Core.ReleaseNotes
 nuget Fake.Tools.Git
 nuget Fake.DotNet.Cli
 nuget Fake.DotNet.AssemblyInfoFile
@@ -27,6 +29,8 @@ open Fake.Core
 open Fake.Core.TargetOperators
 open Fake.IO
 open Fake.DotNet
+
+let release = ReleaseNotes.parse (System.IO.File.ReadAllLines "RELEASE_NOTES.md")
 
 
 Target.create "FSLexYaccBuild" (fun _ ->
@@ -50,7 +54,33 @@ Target.create "FSLexYaccBuild" (fun _ ->
         ] do
         DotNet.exec id $"build" $"{project} -c Release /v:n")
 
+Target.create "PrePackaging" <| fun _ ->
+    let template = """type file
+id WebSharper.FsLexYacc
+authors IntelliFactory
+projectUrl https://websharper.com/
+repositoryType git
+repositoryUrl https://github.com/dotnet-websharper/WebSharper.FsLexYacc.Runtime/
+licenseUrl https://github.com/dotnet-websharper/WebSharper.FsLexYacc.Runtime/blob/master/LICENSE.md
+iconUrl https://github.com/dotnet-websharper/core/raw/websharper50/tools/WebSharper.png
+description
+    WebSharper proxy for FsLexYacc.Runtime
+tags
+    WebSharper Web JavaScript FSharp CSharp
+dependencies
+    framework: netstandard2.0
+        WebSharper ~> LOCKEDVERSION:[3]
+        FsLexYacc.Runtime ~> %VERSION%
+files
+    ../websharper/WebSharper.FsLexYacc.Runtime/bin/Release/netstandard2.0/WebSharper.FsLexYacc.Runtime.dll ==> lib/netstandard2.0
 
+references
+    WebSharper.FsLexYacc.Runtime.dll
+"""
+
+    let content v = template.Replace("%VERSION%", v)
+
+    System.IO.File.WriteAllText("nuget/WebSharper.FsLexYacc.Runtime.paket.template", content release.NugetVersion)
 
 let WithProjects projects args =
     { args with BuildAction = Projects projects }
@@ -70,6 +100,7 @@ LazyVersionFrom "WebSharper" |> WSTargets.Default
 ]
 |> MakeTargets
 |> fun targets ->
+    "PrePackaging" ==> "WS-Package"
     "FSLexYaccBuild" ==> "WS-BuildRelease"
     targets
 |> RunTargets

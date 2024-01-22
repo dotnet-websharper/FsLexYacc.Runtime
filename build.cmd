@@ -1,4 +1,5 @@
 @echo off
 dotnet tool restore
 dotnet paket restore
-dotnet fake run build.fsx %*
+
+call paket-files\wsbuild\github.com\dotnet-websharper\build-script\build.cmd %*
