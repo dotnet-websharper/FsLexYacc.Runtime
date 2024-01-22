@@ -60,8 +60,8 @@ id WebSharper.FsLexYacc
 authors IntelliFactory
 projectUrl https://websharper.com/
 repositoryType git
-repositoryUrl https://github.com/dotnet-websharper/WebSharper.FsLexYacc.Runtime/
-licenseUrl https://github.com/dotnet-websharper/WebSharper.FsLexYacc.Runtime/blob/master/LICENSE.md
+repositoryUrl https://github.com/dotnet-websharper/FsLexYacc.Runtime/
+licenseUrl https://github.com/dotnet-websharper/FsLexYacc.Runtime/blob/master/LICENSE.md
 iconUrl https://github.com/dotnet-websharper/core/raw/websharper50/tools/WebSharper.png
 description
     WebSharper proxy for FsLexYacc.Runtime
