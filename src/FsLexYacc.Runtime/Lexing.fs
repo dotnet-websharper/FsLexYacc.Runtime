@@ -36,8 +36,6 @@ type Position =
     member pos.Column = pos.pos_cnum - pos.pos_bol
 
     member pos.NextLine =
-        let pos = pos
-
         { pos with
             pos_orig_lnum = pos.OriginalLine + 1
             pos_lnum = pos.Line + 1
@@ -45,14 +43,11 @@ type Position =
         }
 
     member pos.EndOfToken(n) =
-        let pos = pos
         { pos with pos_cnum = pos.pos_cnum + n }
 
     member pos.AsNewLinePos() = pos.NextLine
 
     member pos.ShiftColumnBy(by) =
-        let pos = pos
-
         { pos with
             pos_cnum = pos.pos_cnum + by
         }
