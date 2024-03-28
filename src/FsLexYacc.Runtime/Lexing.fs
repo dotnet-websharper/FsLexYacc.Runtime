@@ -36,23 +36,35 @@ type Position =
     member pos.Column = pos.pos_cnum - pos.pos_bol
 
     member this.NextLine =
-        let pos = this
-        { pos with
-            pos_orig_lnum = pos.OriginalLine + 1
-            pos_lnum = pos.Line + 1
-            pos_bol = pos.AbsoluteOffset
+        let origlnum = this.pos_orig_lnum
+        let lnum = this.pos_lnum
+        let bol = this.pos_bol
+        { 
+            pos_cnum = this.pos_cnum
+            pos_fname = this.pos_fname
+            pos_orig_lnum = origlnum + 1
+            pos_lnum = lnum + 1
+            pos_bol = bol
         }
 
     member this.EndOfToken(n) =
-        let pos = this
-        { pos with pos_cnum = pos.pos_cnum + n }
+        { 
+            pos_cnum = this.pos_cnum + n
+            pos_fname = this.pos_fname
+            pos_orig_lnum = this.pos_orig_lnum
+            pos_lnum = this.pos_lnum
+            pos_bol = this.pos_bol
+        }
 
     member pos.AsNewLinePos() = pos.NextLine
 
     member this.ShiftColumnBy(by) =
-        let pos = this
-        { pos with
-            pos_cnum = pos.pos_cnum + by
+        { 
+            pos_cnum = this.pos_cnum + by
+            pos_fname = this.pos_fname
+            pos_orig_lnum = this.pos_orig_lnum
+            pos_lnum = this.pos_lnum
+            pos_bol = this.pos_bol
         }
 
     static member Empty =
