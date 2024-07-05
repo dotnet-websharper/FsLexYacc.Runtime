@@ -1,5 +1,5 @@
 @echo off
 dotnet tool restore
-dotnet paket restore
+dotnet paket update -g wsbuild --no-install
 
-call paket-files\wsbuild\github.com\dotnet-websharper\build-script\build.cmd %*
+dotnet fsi ./build.fsx -t %*

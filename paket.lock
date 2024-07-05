@@ -10,25 +10,25 @@ NUGET
       FsCheck (>= 2.14.3)
     FsCheck (2.16.6)
       FSharp.Core (>= 4.2.3)
-    FSharp.Core (8.0.200)
+    FSharp.Core (8.0.300)
     FsLexYacc (11.3) - copy_local: true
       FSharp.Core (>= 4.6.2)
       FsLexYacc.Runtime (>= 11.3)
     FsLexYacc.Runtime (11.3) - copy_local: true
       FSharp.Core (>= 4.6.2)
     Microsoft.Build.Tasks.Git (8.0) - copy_local: true
-    Microsoft.CodeCoverage (17.9) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= net462)) (&& (== netstandard2.0) (>= netcoreapp3.1))
-    Microsoft.NET.Test.Sdk (17.9)
-      Microsoft.CodeCoverage (>= 17.9) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= net462)) (&& (== netstandard2.0) (>= netcoreapp3.1))
-      Microsoft.TestPlatform.TestHost (>= 17.9) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
+    Microsoft.CodeCoverage (17.10) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= net462)) (&& (== netstandard2.0) (>= netcoreapp3.1))
+    Microsoft.NET.Test.Sdk (17.10)
+      Microsoft.CodeCoverage (>= 17.10) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= net462)) (&& (== netstandard2.0) (>= netcoreapp3.1))
+      Microsoft.TestPlatform.TestHost (>= 17.10) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
     Microsoft.SourceLink.Common (8.0) - copy_local: true
     Microsoft.SourceLink.GitHub (8.0) - copy_local: true
       Microsoft.Build.Tasks.Git (>= 8.0)
       Microsoft.SourceLink.Common (>= 8.0)
-    Microsoft.TestPlatform.ObjectModel (17.9) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
+    Microsoft.TestPlatform.ObjectModel (17.10) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
       System.Reflection.Metadata (>= 1.6)
-    Microsoft.TestPlatform.TestHost (17.9) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
-      Microsoft.TestPlatform.ObjectModel (>= 17.9) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
+    Microsoft.TestPlatform.TestHost (17.10) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
+      Microsoft.TestPlatform.ObjectModel (>= 17.10) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
       Newtonsoft.Json (>= 13.0.1) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
     Mono.Cecil (0.11.5)
     Newtonsoft.Json (13.0.3) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
@@ -45,14 +45,14 @@ NUGET
       FSharp.Core (>= 4.6.2) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
       System.Collections.Immutable (>= 6.0) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
   remote: https://nuget.pkg.github.com/dotnet-websharper/index.json
-    WebSharper (7.0.6.454-beta5)
+    WebSharper (7.0.6.459-beta5)
       FSharp.Core (>= 6.0)
       System.Reflection.Emit.Lightweight (>= 4.7)
-    WebSharper.FSharp (7.0.6.454-beta5)
-      WebSharper (7.0.6.454-beta5)
+    WebSharper.FSharp (7.0.6.459-beta5)
+      WebSharper (7.0.6.459-beta5)
 
 GROUP wsbuild
 
 GIT
   remote: https://github.com/dotnet-websharper/build-script
-     (0153b1033e752df2da5672528e9e04bedafefbea)
+     (cde6d9356c3e67bcaf3bfa7ea0a69ccc5a40a528)
