@@ -32,15 +32,15 @@ NUGET
       Newtonsoft.Json (>= 13.0.1) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
     Mono.Cecil (0.11.6)
     Newtonsoft.Json (13.0.3) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
-    System.Collections.Immutable (9.0.2) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
+    System.Collections.Immutable (9.0.3) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
       System.Memory (>= 4.5.5)
       System.Runtime.CompilerServices.Unsafe (>= 6.0)
     System.Memory (4.6) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
     System.Reflection.Emit.ILGeneration (4.7) - restriction: || (&& (== net6.0) (< netcoreapp2.0) (< netstandard2.1)) (&& (== net6.0) (< netstandard2.0)) (&& (== net6.0) (< portable-net45+wp8)) (&& (== net6.0) (>= uap10.1)) (== netstandard2.0)
     System.Reflection.Emit.Lightweight (4.7)
       System.Reflection.Emit.ILGeneration (>= 4.7) - restriction: || (&& (== net6.0) (< netcoreapp2.0) (< netstandard2.1)) (&& (== net6.0) (< netstandard2.0)) (&& (== net6.0) (< portable-net45+wp8)) (&& (== net6.0) (>= uap10.1)) (== netstandard2.0)
-    System.Reflection.Metadata (9.0.2) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
-      System.Collections.Immutable (>= 9.0.2)
+    System.Reflection.Metadata (9.0.3) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
+      System.Collections.Immutable (>= 9.0.3)
       System.Memory (>= 4.5.5)
     System.Runtime.CompilerServices.Unsafe (6.1) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
     YoloDev.Expecto.TestSdk (0.13.3)
@@ -48,11 +48,11 @@ NUGET
       FSharp.Core (>= 4.6.2) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
       System.Collections.Immutable (>= 6.0) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
   remote: https://nuget.pkg.github.com/dotnet-websharper/index.json
-    WebSharper (8.0.0.512-beta2)
+    WebSharper (8.0.0.521-rc)
       FSharp.Core (>= 6.0)
       System.Reflection.Emit.Lightweight (>= 4.7)
-    WebSharper.FSharp (8.0.0.512-beta2)
-      WebSharper (8.0.0.512-beta2)
+    WebSharper.FSharp (8.0.0.521-rc)
+      WebSharper (8.0.0.521-rc)
 
 GROUP wsbuild
 
