@@ -48,11 +48,11 @@ NUGET
       FSharp.Core (>= 4.6.2) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
       System.Collections.Immutable (>= 6.0) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
   remote: https://nuget.pkg.github.com/dotnet-websharper/index.json
-    WebSharper (8.0.0.521-rc)
+    WebSharper (8.0.0.525-rc2)
       FSharp.Core (>= 6.0)
       System.Reflection.Emit.Lightweight (>= 4.7)
-    WebSharper.FSharp (8.0.0.521-rc)
-      WebSharper (8.0.0.521-rc)
+    WebSharper.FSharp (8.0.0.525-rc2)
+      WebSharper (8.0.0.525-rc2)
 
 GROUP wsbuild
 
