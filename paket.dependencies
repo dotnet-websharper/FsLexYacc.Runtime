@@ -13,8 +13,8 @@ nuget Expecto.FsCheck
 nuget Microsoft.NET.Test.Sdk
 nuget YoloDev.Expecto.TestSdk 0.13.3
 
-nuget WebSharper prerelease
-nuget WebSharper.FSharp prerelease
+nuget WebSharper ~> 8.0
+nuget WebSharper.FSharp ~> 8.0
 
 group wsbuild
     git https://github.com/dotnet-websharper/build-script websharper80
