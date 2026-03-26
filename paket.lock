@@ -10,16 +10,16 @@ NUGET
       FsCheck (>= 2.14.3)
     FsCheck (3.3.2)
       FSharp.Core (>= 5.0.2)
-    FSharp.Core (10.0.103)
+    FSharp.Core (11.0.100)
     FsLexYacc (11.3) - copy_local: true
       FSharp.Core (>= 4.6.2)
       FsLexYacc.Runtime (>= 11.3)
     FsLexYacc.Runtime (11.3) - copy_local: true
       FSharp.Core (>= 4.6.2)
-    Microsoft.NET.Test.Sdk (18.0.1)
-    Microsoft.SourceLink.GitHub (10.0.103) - copy_local: true
+    Microsoft.NET.Test.Sdk (18.3)
+    Microsoft.SourceLink.GitHub (10.0.201) - copy_local: true
     Mono.Cecil (0.11.6)
-    System.Collections.Immutable (10.0.3) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
+    System.Collections.Immutable (10.0.5) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
       System.Memory (>= 4.6.3)
       System.Runtime.CompilerServices.Unsafe (>= 6.1.2)
     System.Memory (4.6.3) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
@@ -32,11 +32,11 @@ NUGET
       FSharp.Core (>= 4.6.2) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
       System.Collections.Immutable (>= 6.0) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
   remote: https://nuget.pkg.github.com/dotnet-websharper/index.json
-    WebSharper (10.1.0.658)
+    WebSharper (10.1.0.664)
       FSharp.Core (>= 6.0)
       System.Reflection.Emit.Lightweight (>= 4.7)
-    WebSharper.FSharp (10.1.0.658)
-      WebSharper (10.1.0.658)
+    WebSharper.FSharp (10.1.0.664)
+      WebSharper (10.1.0.664)
 
 GROUP wsbuild
 
