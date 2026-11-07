@@ -66,6 +66,7 @@ dependencies
         FsLexYacc.Runtime ~> %VERSION%
 files
     ../websharper/WebSharper.FsLexYacc.Runtime/bin/Release/netstandard2.0/WebSharper.FsLexYacc.Runtime.dll ==> lib/netstandard2.0
+    ../websharper/WebSharper.FsLexYacc.Runtime/bin/Release/netstandard2.0/WebSharper.FsLexYacc.Runtime.websharper ==> lib/netstandard2.0
 
 references
     WebSharper.FsLexYacc.Runtime.dll
