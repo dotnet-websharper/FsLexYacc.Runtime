@@ -3,6 +3,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <DefineConstants>$(DefineConstants);JAVASCRIPT</DefineConstants>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- WS9002: WebSharper cannot load System.Globalization.CharUnicodeInfo for
+         proxy signature verification (it lives behind a reference-assembly
+         forwarder), but the proxy is used and verified at runtime. -->
+    <NoWarn>$(NoWarn);WS9002</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Proxies.fs" />
@@ -11,7 +15,6 @@
     <Compile Include="..\..\src\FsLexYacc.Runtime\Lexing.fs" />
     <Compile Include="..\..\src\FsLexYacc.Runtime\Parsing.fsi" />
     <Compile Include="..\..\src\FsLexYacc.Runtime\Parsing.fs" />
-    <None Include="Readme.md" />
     <None Include="wsconfig.json" />
   </ItemGroup>
   <ItemGroup>

@@ -38,13 +38,12 @@ type Position =
     member this.NextLine =
         let origlnum = this.pos_orig_lnum
         let lnum = this.pos_lnum
-        let bol = this.pos_bol
         { 
             pos_cnum = this.pos_cnum
             pos_fname = this.pos_fname
             pos_orig_lnum = origlnum + 1
             pos_lnum = lnum + 1
-            pos_bol = bol
+            pos_bol = this.pos_cnum
         }
 
     member this.EndOfToken(n) =
@@ -300,6 +299,9 @@ and [<Sealed>] LexBuffer<'char>(filler: LexBufferFiller<'char>) =
     static member FromString(s: string) =
         LexBuffer<char>.FromArray(s.ToCharArray())
 
+#if !JAVASCRIPT
+    // Browsers have no synchronous file/stream IO, so these reader based
+    // factories are .NET-only. In the browser use FromString/FromChars/FromBytes.
     static member FromTextReader(tr: System.IO.TextReader) : LexBuffer<char> =
         LexBuffer<char>
             .FromReadFunctions(Some tr.Read, Some(tr.ReadAsync >> Async.AwaitTask))
@@ -309,6 +311,7 @@ and [<Sealed>] LexBuffer<'char>(filler: LexBufferFiller<'char>) =
     static member FromStream(stream: System.IO.Stream) : LexBuffer<byte> =
         LexBuffer<byte>
             .FromReadFunctions(Some(stream.Read), Some(fun (buf, offset, len) -> stream.AsyncRead(buf, offset = offset, count = len)))
+#endif
 #if JAVASCRIPT
 [<WebSharper.JavaScript>]
 #endif
@@ -530,8 +533,11 @@ type UnicodeTables(trans: uint16[] array, accept: uint16[]) =
 
     static member Create(trans, accept) = UnicodeTables(trans, accept)
 
+#if !JAVASCRIPT
 open System.IO
 
+// Browsers have no synchronous file IO, so this helper is .NET-only. In the
+// browser read the file with the File/FileReader API and use FromString.
 let UnicodeFileAsLexbuf (filename, codePage: int option) : FileStream * StreamReader * LexBuffer<char> =
     // Use the .NET functionality to auto-detect the unicode encoding
     // It also presents the bytes read to the lexer in UTF8 decoded form
@@ -546,3 +552,4 @@ let UnicodeFileAsLexbuf (filename, codePage: int option) : FileStream * StreamRe
     let lexbuf = LexBuffer.FromFunction(reader.Read)
     lexbuf.EndPos <- Position.FirstLine(filename)
     stream, reader, lexbuf
+#endif
