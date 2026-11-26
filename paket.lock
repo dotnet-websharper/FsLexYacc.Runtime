@@ -41,18 +41,19 @@ NUGET
     System.Reflection.Emit.Lightweight (4.7)
       System.Reflection.Emit.ILGeneration (>= 4.7) - restriction: || (&& (== net10.0) (< netcoreapp2.0) (< netstandard2.1)) (&& (== net10.0) (< netstandard2.0)) (&& (== net10.0) (< portable-net45+wp8)) (&& (== net10.0) (>= uap10.1)) (&& (== net6.0) (< netcoreapp2.0) (< netstandard2.1)) (&& (== net6.0) (< netstandard2.0)) (&& (== net6.0) (< portable-net45+wp8)) (&& (== net6.0) (>= uap10.1)) (== netstandard2.0)
     System.Runtime.CompilerServices.Unsafe (6.1.2) - restriction: || (&& (== net10.0) (== netstandard2.0)) (&& (== net10.0) (>= net462)) (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
-    WebSharper (10.1.11.762)
-      FSharp.Core (>= 6.0)
-      System.Reflection.Emit.Lightweight (>= 4.7)
-    WebSharper.FSharp (10.1.11.762)
-      WebSharper (10.1.11.762)
-    WebSharper.UI (10.1.9.762)
-      HtmlAgilityPack (>= 1.12.4)
-      WebSharper (>= 10.1.11.762 < 10.1.12)
     YoloDev.Expecto.TestSdk (0.13.3)
       Expecto (>= 9.0 < 10.0) - restriction: || (== net10.0) (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
       FSharp.Core (>= 4.6.2) - restriction: || (== net10.0) (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
       System.Collections.Immutable (>= 6.0) - restriction: || (== net10.0) (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
+  remote: https://nuget.pkg.github.com/dotnet-websharper/index.json
+    WebSharper (10.1.11.775)
+      FSharp.Core (>= 6.0)
+      System.Reflection.Emit.Lightweight (>= 4.7)
+    WebSharper.FSharp (10.1.11.775)
+      WebSharper (10.1.11.775)
+    WebSharper.UI (10.1.9.775)
+      HtmlAgilityPack (>= 1.12.4)
+      WebSharper (>= 10.1.11.775 < 10.1.12)
 
 GROUP wsbuild
 
