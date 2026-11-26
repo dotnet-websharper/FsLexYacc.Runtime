@@ -3,7 +3,7 @@ source https://nuget.pkg.github.com/dotnet-websharper/index.json
 source ../localnuget
 
 storage: none
-frameworks: netstandard2.0, net6.0
+frameworks: netstandard2.0, net6.0, net10.0
 
 nuget FSharp.Core >= 4.6.0
 nuget FsLexYacc copy_local: true
@@ -15,6 +15,7 @@ nuget YoloDev.Expecto.TestSdk 0.13.3
 
 nuget WebSharper prerelease
 nuget WebSharper.FSharp prerelease
+nuget WebSharper.UI prerelease
 
 group wsbuild
     git https://github.com/dotnet-websharper/build-script websharper80

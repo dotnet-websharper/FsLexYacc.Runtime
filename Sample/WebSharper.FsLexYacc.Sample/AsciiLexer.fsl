@@ -1,0 +1,46 @@
+{
+// An intentionally small ASCII lexer (no --unicode): it exercises the
+// AsciiTables interpreter and the byte/char LexBuffer factories.
+[<WebSharper.JavaScript>]
+module AsciiLexer
+
+open FSharp.Text.Lexing
+
+type Token =
+    | INT of int
+    | LPAREN
+    | RPAREN
+    | PLUS
+    | MINUS
+    | STAR
+    | SLASH
+    | WHITESPACE
+    | NEWLINE
+    | EOF
+    | INVALID of string
+
+let lexeme (lexbuf: LexBuffer<byte>) =
+    System.String(lexbuf.Lexeme |> Array.map char)
+
+let newline (lexbuf: LexBuffer<byte>) =
+    lexbuf.StartPos <- lexbuf.StartPos.NextLine
+
+}
+
+let digit = ['0'-'9']
+let int = digit+
+let white = [' ' '\t']+
+let newline = ('\n' | '\r' '\n')
+
+rule token = parse
+| int       { INT (int (lexeme lexbuf)) }
+| '('       { LPAREN }
+| ')'       { RPAREN }
+| '+'       { PLUS }
+| '-'       { MINUS }
+| '*'       { STAR }
+| '/'       { SLASH }
+| white     { WHITESPACE }
+| newline   { newline lexbuf; NEWLINE }
+| eof       { EOF }
+| _         { INVALID (lexeme lexbuf) }
