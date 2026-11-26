@@ -66,9 +66,21 @@ let parse (text: string) =
     Parser.start Lexer.tokenstream lexbuf
 ```
 
-To run it in the browser, reference this package and mark the client code (and
-the generated lexer/parser modules) for WebSharper. The sample shows the
-attribute placement:
+To run it in the browser, reference this package and compile the client code
+(including the generated lexer/parser modules) for WebSharper. For an
+application, set `"javascript": true` in its `wsconfig.json` to compile the
+whole assembly — no attribute placement needed:
+
+```json
+{
+  "project": "spa",
+  "outputDir": "build",
+  "javascript": true
+}
+```
+
+For a library where only part of the assembly is client code, mark the generated
+modules instead:
 
 ```fsharp
 [<WebSharper.JavaScript>]
@@ -109,13 +121,11 @@ Then open <http://localhost:8080>. (Install
 [dotnet-serve](https://github.com/dotnet-serve/dotnet-serve) once with
 `dotnet tool install -g dotnet-serve`.)
 
-The sample commits the `fslex`/`fsyacc` output so that it builds without the
-tools. Regenerate it after editing a `.fsl`/`.fsy`:
-
-```
-cd Sample/WebSharper.FsLexYacc.Sample
-./regenerate.sh
-```
+The sample's `fsl`/`fsy` grammars are generated at build time by the
+`FsLexYacc` package's MSBuild targets (the sample references the `FsLexYacc`
+package, so no `regenerate.sh` or committed output is needed). The generated
+`.fs`/`.fsi` files land in the intermediate folder (`obj/`); edit a `.fsl`/`.fsy`
+source and rebuild.
 
 Build from source
 -----------------

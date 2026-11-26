@@ -1,6 +1,5 @@
 ﻿{
  
-[<WebSharper.JavaScript>]
 module HelloLexer
 
 // Opens methods related to fslex.exe

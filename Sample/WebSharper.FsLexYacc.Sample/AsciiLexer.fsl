@@ -1,7 +1,6 @@
 {
 // An intentionally small ASCII lexer (no --unicode): it exercises the
 // AsciiTables interpreter and the byte/char LexBuffer factories.
-[<WebSharper.JavaScript>]
 module AsciiLexer
 
 open FSharp.Text.Lexing
