@@ -6,6 +6,8 @@
 #r "nuget: Fake.DotNet.Cli"
 #r "nuget: Fake.DotNet.AssemblyInfoFile"
 #r "nuget: Fake.DotNet.Paket"
+#r "nuget: Paket.Core, 12.0.0-alpha001"
+#r "nuget: MSBuild.StructuredLogger"
 
 open Fake.Core
 System.Environment.GetCommandLineArgs()
@@ -63,7 +65,7 @@ tags
 dependencies
     framework: netstandard2.0
         WebSharper ~> LOCKEDVERSION:[3]
-        FsLexYacc.Runtime ~> %VERSION%
+        FsLexYacc.Runtime ~> 13.0
 files
     ../websharper/WebSharper.FsLexYacc.Runtime/bin/Release/netstandard2.0/WebSharper.FsLexYacc.Runtime.dll ==> lib/netstandard2.0
 
@@ -71,9 +73,7 @@ references
     WebSharper.FsLexYacc.Runtime.dll
 """
 
-    let content v = template.Replace("%VERSION%", v)
-
-    System.IO.File.WriteAllText("nuget/WebSharper.FsLexYacc.Runtime.paket.template", content release.NugetVersion)
+    System.IO.File.WriteAllText("nuget/WebSharper.FsLexYacc.Runtime.paket.template", template)
 
 let WithProjects projects args =
     { args with BuildAction = Projects projects }

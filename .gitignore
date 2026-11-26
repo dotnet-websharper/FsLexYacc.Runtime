@@ -203,7 +203,9 @@ tests/fsyacc/Test1/test1.fs
 tests/fsyacc/Test1/test1.fsi
 tests/fsyacc/Test1/test1lex.fs
 
-.paket
+# .paket/Paket.Restore.targets is committed so a fresh checkout can restore
+.paket/paket-files
+.paket/paket.restore.cached
 .idea/
 .vs/
 .ionide/
@@ -220,5 +222,9 @@ tests/fsyacc/repro_#141/Lexer_fail_option_i.fs
 .vite/
 
 paket-files/
+
+# Sample build artefacts
+Sample/dist/
+**/node_modules/
 
 nuget/WebSharper.FsLexYacc.Runtime.paket.template

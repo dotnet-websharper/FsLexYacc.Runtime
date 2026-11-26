@@ -1,127 +1,62 @@
+// WebSharper proxies for the BCL members that FsLexYacc.Runtime uses but that
+// WebSharper's standard library does not model.
+//
+// Only the Unicode classification is needed by generated lexers/parsers: the
+// string/array based LexBuffer factories (FromString, FromChars, FromBytes)
+// are what make sense in a browser. The reader/stream based factories and
+// UnicodeFileAsLexbuf live behind `#if !JAVASCRIPT` in the runtime sources
+// because browsers have no synchronous file IO.
 namespace FsLexYaccProxies
 
 open WebSharper
 open WebSharper.JavaScript
 
-[<Proxy("Microsoft.FSharp.Control.CommonExtensions, FSharp.Core")>]
-module internal ControlProxies =
-    type System.IO.Stream with
+module internal UnicodeCategories =
 
-        [<CompiledName("AsyncRead")>]
-        member stream.AsyncRead(buffer: byte[], ?offset: int, ?count: int) : Async<int> = Unchecked.defaultof<_> // TODO
+    /// Test a character against a JavaScript Unicode property escape (`\p{...}`).
+    [<Inline "new RegExp($0, \"u\").test($1)">]
+    let test (pattern: string) (ch: char) : bool = X<bool>
 
-module internal Proxies =
-    [<Proxy(typeof<System.Globalization.UnicodeCategory>)>]
-    type UnicodeCategoryProxy =
-        | ClosePunctuation = 21
-        | ConnectorPunctuation = 18
-        | Control = 14
-        | CurrencySymbol = 26
-        | DashPunctuation = 19
-        | DecimalDigitNumber = 8
-        | EnclosingMark = 7
-        | FinalQuotePunctuation = 23
-        | Format = 15
-        | InitialQuotePunctuation = 22
-        | LetterNumber = 9
-        | LineSeparator = 12
-        | LowercaseLetter = 1
-        | MathSymbol = 25
-        | ModifierLetter = 3
-        | ModifierSymbol = 27
-        | NonSpacingMark = 5
-        | OpenPunctuation = 20
-        | OtherLetter = 4
-        | OtherNotAssigned = 29
-        | OtherNumber = 10
-        | OtherPunctuation = 24
-        | OtherSymbol = 28
-        | ParagraphSeparator = 13
-        | PrivateUse = 17
-        | SpaceSeparator = 11
-        | SpacingCombiningMark = 6
-        | Surrogate = 16
-        | TitlecaseLetter = 2
-        | UppercaseLetter = 0
+/// `System.Globalization.CharUnicodeInfo.GetUnicodeCategory` drives the
+/// category-based transitions of `UnicodeTables`. Classify a character with the
+/// Unicode property escapes built into the JS regex engine, returning the
+/// matching `System.Globalization.UnicodeCategory` value.
+[<Proxy(typeof<System.Globalization.CharUnicodeInfo>)>]
+type internal CharUnicodeInfoProxy() =
 
-    [<Proxy(typeof<System.Globalization.CharUnicodeInfo>)>]
-    type CharUnicodeInfoProxy() =
-        static member GetUnicodeCategory(ch: char) : System.Globalization.UnicodeCategory = 0 |> As // TODO
+    static member GetUnicodeCategory(ch: char) : System.Globalization.UnicodeCategory =
+        let isCat = UnicodeCategories.test
 
-    [<Proxy(typeof<System.IO.Stream>); AbstractClass>]
-    type StreamProxy() =
-        inherit ReadableStream()
-        abstract Read: buffer: byte array * offset: int * count: int -> int
-    // abstract AsyncRead: buffer:byte array * ?offset:int * ?count:int -> Async<int>
+        let category =
+            if isCat @"\p{Lu}" ch then 0 // UppercaseLetter
+            elif isCat @"\p{Ll}" ch then 1 // LowercaseLetter
+            elif isCat @"\p{Lt}" ch then 2 // TitlecaseLetter
+            elif isCat @"\p{Lm}" ch then 3 // ModifierLetter
+            elif isCat @"\p{Lo}" ch then 4 // OtherLetter
+            elif isCat @"\p{Mn}" ch then 5 // NonSpacingMark
+            elif isCat @"\p{Mc}" ch then 6 // SpacingCombiningMark
+            elif isCat @"\p{Me}" ch then 7 // EnclosingMark
+            elif isCat @"\p{Nd}" ch then 8 // DecimalDigitNumber
+            elif isCat @"\p{Nl}" ch then 9 // LetterNumber
+            elif isCat @"\p{No}" ch then 10 // OtherNumber
+            elif isCat @"\p{Zs}" ch then 11 // SpaceSeparator
+            elif isCat @"\p{Zl}" ch then 12 // LineSeparator
+            elif isCat @"\p{Zp}" ch then 13 // ParagraphSeparator
+            elif isCat @"\p{Cc}" ch then 14 // Control
+            elif isCat @"\p{Cf}" ch then 15 // Format
+            elif isCat @"\p{Cs}" ch then 16 // Surrogate
+            elif isCat @"\p{Co}" ch then 17 // PrivateUse
+            elif isCat @"\p{Pc}" ch then 18 // ConnectorPunctuation
+            elif isCat @"\p{Pd}" ch then 19 // DashPunctuation
+            elif isCat @"\p{Ps}" ch then 20 // OpenPunctuation
+            elif isCat @"\p{Pe}" ch then 21 // ClosePunctuation
+            elif isCat @"\p{Pi}" ch then 22 // InitialQuotePunctuation
+            elif isCat @"\p{Pf}" ch then 23 // FinalQuotePunctuation
+            elif isCat @"\p{Po}" ch then 24 // OtherPunctuation
+            elif isCat @"\p{Sm}" ch then 25 // MathSymbol
+            elif isCat @"\p{Sc}" ch then 26 // CurrencySymbol
+            elif isCat @"\p{Sk}" ch then 27 // ModifierSymbol
+            elif isCat @"\p{So}" ch then 28 // OtherSymbol
+            else 29 // OtherNotAssigned
 
-    // default this.AsyncRead(buffer: byte array, offset: int option, count: int option): Async<int> =
-    //     Unchecked.defaultof<_> // TODO
-
-    [<Proxy(typeof<System.IO.TextReader>); AbstractClass>]
-    type TextReaderProxy() =
-        inherit ReadableStream()
-        abstract Read: buffer: char[] * index: int * count: int -> int
-        abstract ReadAsync: buffer: char[] * index: int * count: int -> System.Threading.Tasks.Task<int>
-
-    [<Proxy(typeof<System.IO.StreamReader>)>]
-    type StreamReaderProxy() =
-        inherit TextReaderProxy()
-        // TODO: check
-        new(stream: System.IO.Stream, detectEncodingFromByteOrderMarks: bool) = StreamReaderProxy()
-
-        new(stream: System.IO.Stream, encoding: System.Text.Encoding) = StreamReaderProxy()
-
-        member this.Read() : int =
-            let reader = this.GetReader() |> As<ReadableStreamDefaultReader>
-            let v = reader.Read().Value
-            if v = null then -1 else (v |> As<int>)
-
-        override this.Read(buffer: char[], index: int, count: int) : int =
-            let mutable ch_count = 0
-            let mutable i = index
-            let mutable ch = this.Read()
-            let mutable ch_count = if ch > -1 then 1 else 0
-
-            while i < index + count && ch > -1 do
-                buffer[i] <- char ch
-                ch_count <- ch_count + 1
-                ch <- this.Read()
-
-            ch_count
-
-        override this.ReadAsync(buffer: char[], index: int, count: int) : System.Threading.Tasks.Task<int> =
-            task { return this.Read(buffer, index, count) } // TODO
-
-    [<Proxy(typeof<System.IO.BinaryReader>)>]
-    type BinaryReaderProxy() =
-        inherit StreamProxy()
-
-        override this.Read(buffer: byte array, offset: int, count: int) : int = failwith "Not Implemented"
-    // TODO
-    [<Proxy(typeof<System.Text.Encoding>)>]
-    type EncodingProxy() =
-        static member GetEncoding(codepage: int) : System.Text.Encoding = System.Text.Encoding.Default
-
-        [<Inline("new TextEncoder().encoding")>]
-        static member Default: System.Text.Encoding = Unchecked.defaultof<_>
-
-    [<Proxy(typeof<System.IO.FileStream>)>]
-    type FileStreamProxy() =
-        inherit StreamProxy()
-
-        // TODO proper proxy
-        new(path: string, mode: System.IO.FileMode, access: System.IO.FileAccess, share: System.IO.FileShare) = FileStreamProxy()
-
-        override this.Read(buffer: byte array, offset: int, count: int) : int =
-            let buf = Uint8Array(ArrayBuffer(buffer.Length), offset, count)
-            let options = ReadableStreamGetReaderOptions(ReadableStreamReaderMode.Byob)
-            let reader = this.GetReader(options) |> As<ReadableStreamBYOBReader>
-
-            let maybeThisArr = reader.Read(buf).Value |> As<Uint8Array>
-            maybeThisArr.ByteLength
-// override this.AsyncRead(buffer: byte array, ?offset: int, ?count: int): Async<int> =
-//     async {
-//         let offset = Option.defaultValue 0 offset
-//         let count = Option.defaultValue buffer.Length count
-//         return this.Read(buffer,offset,count)
-//     }
+        LanguagePrimitives.EnumOfValue category
